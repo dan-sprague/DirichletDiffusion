@@ -66,7 +66,7 @@ priors = [0.5, 0.25, 0.25]
 
 model = MixtureModel(components, priors)
 
-N = 50
+N = 1000
 data = rand(model, N)
 
 
