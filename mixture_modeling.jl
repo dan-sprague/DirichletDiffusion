@@ -320,7 +320,7 @@ function generate_data(means, n_samples, σ_val)
     n_per = div(n_samples, length(means))
     Σ = [1.0 0.0; 0.0 1.0] .* σ_val
     X = hcat([rand(MvNormal(m, Σ), n_per) for m in means]...)
-    return X[:, shuffle(1:size(X, 2))]
+    return X[:, shuffle(1:size(X, 2))],n_per
 end
 
 println("Generating Datasets...")
@@ -394,3 +394,47 @@ resize_to_layout!(f_grid)
 save("gmm_grid_comparison_final.png", f_grid)
 println("Done. Saved to gmm_grid_comparison.png")
 display(f_grid)
+
+
+
+fig = Figure(size=(600,300))
+ax = Axis(fig[1,2],
+    width = 150,
+    height = 150,
+    xlabel = "Dim 1",
+    ylabel = "Dim 2")
+
+
+for k in 1:3
+    x1 = rand(MvNormal(μ_close[k],I),250)
+    color_idx = rank_colors[k]
+
+    for i in 1:250
+        scatter!(ax, [x1[1, i]], [x1[2, i]],
+            color=color_idx,
+            markersize=8,
+            alpha=1)
+    end
+end
+
+ax2 = Axis(fig[1,1],
+    width = 150,
+    height = 150,
+    xlabel = "Dim 1",
+    ylabel = "Dim 2")
+
+
+for k in 1:3
+    x1 = rand(MvNormal(μ_close[k],I),250)
+    color_idx = rank_colors[k]
+
+    for i in 1:250
+        scatter!(ax2, [x1[1, i]], [x1[2, i]],
+            color=:grey,
+            markersize=8,
+            alpha=1)
+    end
+end
+resize_to_layout!(fig)
+fig
+save("demo.png",fig)

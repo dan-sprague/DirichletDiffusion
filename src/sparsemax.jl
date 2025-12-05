@@ -1,15 +1,3 @@
-using Random
-using Distributions
-using StaticArrays
-using Turing,Mooncake
-using FillArrays
-const D = 2
-
-function sample_gumbel(shape...)
-    μ = rand(shape...) 
-    return -log.(-log.(μ .+ 1e-12))
-end
-
 function project_to_simplex(y::Vector{T}) where T <: Real 
     
     μ = sort(y, rev = true)
@@ -33,18 +21,11 @@ function project_to_simplex(y::Vector{T}) where T <: Real
     return max.(y .+ λ, zero(T)) 
 end
 
-function gumbel_sparsemax(logits,temperature = 1.0)
-    noisy_logits = (logits .+ sample_gumbel(size(logits)...)) / temperature
 
-    project_to_simplex(noisy_logits)
-
-end
-
-
-function ChainRulesCore.rrule(::typeof(simplex_projection), y::AbstractVector)
-    z = simplex_projection(y)
+function ChainRulesCore.rrule(::typeof(project_to_simplex), y::AbstractVector)
+    z = project_to_simplex(y)
     
-    function simplex_projection_pullback(ȳ)
+    function project_to_simplex_pullback(ȳ)
         S = z .> 0
         
         sum_S = sum(S)
@@ -55,5 +36,5 @@ function ChainRulesCore.rrule(::typeof(simplex_projection), y::AbstractVector)
         return NoTangent(), ∇y
     end
     
-    return z, simplex_projection_pullback
+    return z, project_to_simplex_pullback
 end
