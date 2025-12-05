@@ -1,0 +1,12 @@
+name = "DirichletDiffusion"
+uuid = "982e8bbf-e5c7-4ea7-a34d-76b67b1e00c4"
+version = "0.1.0"
+authors = ["dan-sprague <d.a.sprague@outlook.com>"]
+
+[deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
+[compat]
+Distributions = "0.25.122"
+StaticArrays = "1.9.15"
