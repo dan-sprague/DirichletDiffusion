@@ -24,7 +24,7 @@ function deterministic_sparsemax(logits, temperature=1.0)
     return mapslices(project_to_simplex, logits ./ temperature, dims=1)
 end
 
-@model function gumbel_sparsemax_tmm(x)
+@model function gumbel_sparsemax_mixture(x)
     D_feature, N = size(x)
     K = 3
 
@@ -70,7 +70,7 @@ N = 1000
 data = rand(model, N)
 
 
-model = gumbel_sparsemax_gmm(data)
+model = gumbel_sparsemax_mixture(data)
 
 println("Sampling...")
 chain = sample(model, NUTS(500,0.65), 1000)
